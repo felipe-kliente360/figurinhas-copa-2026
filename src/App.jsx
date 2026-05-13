@@ -504,7 +504,10 @@ function StatsView({ stickers, owned, progress }) {
   }), [stickers])
 
   const dupQty = useMemo(() => Object.values(stickers).reduce((acc, v) => v.status === 'repetida' ? acc + (v.qty || 2) : acc, 0), [stickers])
-  const packets = Math.floor(owned / 7)
+  const missing = TOTAL_STICKERS - owned
+  const tradeableForMissing = Math.floor(dupQty / 3)
+  const effectiveMissing = Math.max(0, missing - tradeableForMissing)
+  const packets = Math.ceil(effectiveMissing / 7)
 
   const motiv =
     progress >= 100 ? 'ÁLBUM COMPLETO! MIGUEL É O CAMPEÃO! 🎆🥇🎆'
@@ -542,7 +545,7 @@ function StatsView({ stickers, owned, progress }) {
         </div>
         <div style={{ background: C.cardMed, borderRadius: 10, padding: '14px 12px', border: '1px solid #1f4a30', textAlign: 'center' }}>
           <div style={{ color: C.green, fontFamily: 'Boogaloo', fontSize: 36 }}>{packets}</div>
-          <div style={{ color: '#9ca3af', fontFamily: 'Nunito', fontSize: 13 }}>📦 pacotes estimados</div>
+          <div style={{ color: '#9ca3af', fontFamily: 'Nunito', fontSize: 13 }}>📦 pacotes pra completar</div>
         </div>
       </div>
 
