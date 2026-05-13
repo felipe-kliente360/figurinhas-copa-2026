@@ -26,6 +26,12 @@ const MILESTONE_MSGS = {
   100: 'ÁLBUM COMPLETO! MIGUEL É O CAMPEÃO! 🎆🥇🎆',
 }
 
+function getStickerName(team, num) {
+  if (num === 1) return 'Escudo'
+  if (num === 13) return 'Foto do time'
+  return num <= 12 ? team.players[num - 2] : team.players[num - 3]
+}
+
 // ── Storage ────────────────────────────────────────────────────────────────
 function loadStickers() {
   try {
@@ -128,14 +134,14 @@ function TeamSection({ team, stickers, onCycle, onAdjust }) {
 
   const owned = useMemo(() => {
     let n = 0
-    for (let i = 1; i <= 19; i++) {
+    for (let i = 1; i <= 20; i++) {
       if ((stickers[`${team.code}-${i}`]?.status || 'falta') !== 'falta') n++
     }
     return n
   }, [stickers, team.code])
 
-  const pct = Math.round((owned / 19) * 100)
-  const complete = owned === 19
+  const pct = Math.round((owned / 20) * 100)
+  const complete = owned === 20
 
   return (
     <div style={{
@@ -158,7 +164,7 @@ function TeamSection({ team, stickers, onCycle, onAdjust }) {
           </div>
         </div>
         <span style={{ color: complete ? C.gold : C.green, fontFamily: 'Boogaloo', fontSize: 15, whiteSpace: 'nowrap' }}>
-          {owned}/19
+          {owned}/20
         </span>
         {open ? <ChevronDown size={18} color={C.cream} /> : <ChevronRight size={18} color={C.cream} />}
       </button>
@@ -166,7 +172,7 @@ function TeamSection({ team, stickers, onCycle, onAdjust }) {
       {open && (
         <div style={{ padding: '0 10px 10px' }}>
           <div className="sticker-grid">
-            {Array.from({ length: 19 }, (_, i) => {
+            {Array.from({ length: 20 }, (_, i) => {
               const num = i + 1
               const key = `${team.code}-${num}`
               const s = stickers[key] || { status: 'falta', qty: 0 }
@@ -175,7 +181,7 @@ function TeamSection({ team, stickers, onCycle, onAdjust }) {
                   key={key}
                   stickerKey={key}
                   number={num}
-                  name={num === 1 ? 'Escudo' : team.players[num - 2]}
+                  name={getStickerName(team, num)}
                   status={s.status}
                   qty={s.qty || 2}
                   onCycle={onCycle}
@@ -270,9 +276,9 @@ function AlbumView({ stickers, onCycle, onAdjust, searchQuery }) {
 
       for (const team of group.teams) {
         const fullTeamMatch = groupMatch(team)
-        for (let i = 1; i <= 19; i++) {
+        for (let i = 1; i <= 20; i++) {
           const key = `${team.code}-${i}`
-          const name = i === 1 ? 'Escudo' : team.players[i - 2]
+          const name = getStickerName(team, i)
           if (
             fullTeamMatch ||
             name.toLowerCase().includes(q) ||
@@ -315,7 +321,7 @@ function AlbumView({ stickers, onCycle, onAdjust, searchQuery }) {
             return (
               <div key={key}>
                 <div style={{ color: C.gold, fontFamily: 'Boogaloo', fontSize: 11, textAlign: 'center', marginBottom: 2 }}>
-                  {team ? `${team.flag} ${team.code}` : '⭐ ESP'}
+                  {team ? `${team.flag} ${team.code}` : '⭐ SPC'}
                 </div>
                 <StickerCard stickerKey={key} number={num} name={name} status={s.status} qty={s.qty || 2} onCycle={onCycle} onAdjust={onAdjust} />
               </div>
@@ -353,10 +359,10 @@ function FaltamView({ stickers, onCycle, onAdjust }) {
     for (const group of GROUPS_DATA) {
       for (const team of group.teams) {
         const missing = []
-        for (let i = 1; i <= 19; i++) {
+        for (let i = 1; i <= 20; i++) {
           const key = `${team.code}-${i}`
           if ((stickers[key]?.status || 'falta') === 'falta') {
-            missing.push({ key, num: i, name: i === 1 ? 'Escudo' : team.players[i - 2] })
+            missing.push({ key, num: i, name: getStickerName(team, i) })
           }
         }
         if (missing.length > 0) result.push({ team, missing })
@@ -412,10 +418,10 @@ function RepetidaView({ stickers, onCycle, onAdjust }) {
     for (const group of GROUPS_DATA) {
       for (const team of group.teams) {
         const dupes = []
-        for (let i = 1; i <= 19; i++) {
+        for (let i = 1; i <= 20; i++) {
           const key = `${team.code}-${i}`
           const s = stickers[key]
-          if (s?.status === 'repetida') dupes.push({ key, num: i, name: i === 1 ? 'Escudo' : team.players[i - 2], qty: s.qty || 2 })
+          if (s?.status === 'repetida') dupes.push({ key, num: i, name: getStickerName(team, i), qty: s.qty || 2 })
         }
         if (dupes.length > 0) result.push({ team, dupes })
       }
@@ -469,9 +475,9 @@ function RepetidaView({ stickers, onCycle, onAdjust }) {
 function StatsView({ stickers, owned, progress }) {
   const groupStats = useMemo(() => GROUPS_DATA.map(group => {
     let n = 0
-    const total = group.teams.length * 19
+    const total = group.teams.length * 20
     for (const team of group.teams)
-      for (let i = 1; i <= 19; i++)
+      for (let i = 1; i <= 20; i++)
         if ((stickers[`${team.code}-${i}`]?.status || 'falta') !== 'falta') n++
     return { group: group.group, owned: n, total, pct: Math.round((n / total) * 100) }
   }), [stickers])
@@ -556,7 +562,7 @@ function ShareModal({ stickers, owned, onClose, onImport }) {
 
     for (const group of GROUPS_DATA) {
       for (const team of group.teams) {
-        for (let i = 1; i <= 19; i++) {
+        for (let i = 1; i <= 20; i++) {
           const key = `${team.code}-${i}`
           const s = stickers[key]
           if (s?.status === 'repetida') repeated.push(`${key}×${s.qty || 2}`)
@@ -683,7 +689,7 @@ export default function App() {
     let owned = 0
     for (const group of GROUPS_DATA)
       for (const team of group.teams)
-        for (let i = 1; i <= 19; i++)
+        for (let i = 1; i <= 20; i++)
           if ((stickers[`${team.code}-${i}`]?.status || 'falta') !== 'falta') owned++
     for (let i = 1; i <= 68; i++)
       if ((stickers[`SPC-${i}`]?.status || 'falta') !== 'falta') owned++
