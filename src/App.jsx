@@ -3,7 +3,7 @@ import {
   Search, Share2, Trophy, ChevronDown, ChevronRight,
   Plus, Minus, X, Copy, CheckCircle,
 } from 'lucide-react'
-import { GROUPS_DATA, ESPECIAIS, TOTAL_STICKERS } from './data'
+import { GROUPS_DATA, FWC_STICKERS, CC_STICKERS, TOTAL_STICKERS } from './data'
 
 // ── Constants ──────────────────────────────────────────────────────────────
 const STORAGE_KEY = 'album-miguel-2026'
@@ -196,57 +196,58 @@ function TeamSection({ team, stickers, onCycle, onAdjust }) {
   )
 }
 
-// ── SpeciaisSection ────────────────────────────────────────────────────────
-function SpeciaisSection({ stickers, onCycle, onAdjust }) {
+// ── SpecialSection ─────────────────────────────────────────────────────────
+function SpecialSection({ items, prefix, label, icon, accentColor, borderColor, stickers, onCycle, onAdjust }) {
   const [open, setOpen] = useState(false)
 
   const owned = useMemo(() => {
     let n = 0
-    for (let i = 1; i <= 68; i++) {
-      if ((stickers[`SPC-${i}`]?.status || 'falta') !== 'falta') n++
+    for (const item of items) {
+      if ((stickers[`${prefix}-${item.id}`]?.status || 'falta') !== 'falta') n++
     }
     return n
-  }, [stickers])
+  }, [stickers, items, prefix])
 
-  const pct = Math.round((owned / 68) * 100)
-  const complete = owned === 68
+  const total = items.length
+  const pct = Math.round((owned / total) * 100)
+  const complete = owned === total
 
   return (
     <div style={{
       background: C.cardMed, borderRadius: 10, marginBottom: 8,
-      border: `2px solid ${complete ? C.gold : '#4c1d95'}`,
-      boxShadow: complete ? '0 0 12px rgba(251,191,36,0.3)' : '0 0 8px rgba(124,58,237,0.2)',
+      border: `2px solid ${complete ? C.gold : borderColor}`,
+      boxShadow: complete ? '0 0 12px rgba(251,191,36,0.3)' : `0 0 8px ${borderColor}33`,
     }}>
       <button
         onClick={() => setOpen(o => !o)}
         style={{ width: '100%', background: 'none', border: 'none', cursor: 'pointer', padding: '10px 12px', display: 'flex', alignItems: 'center', gap: 10 }}
       >
-        <span style={{ fontSize: 26 }}>⭐</span>
+        <span style={{ fontSize: 26 }}>{icon}</span>
         <div style={{ flex: 1, textAlign: 'left' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-            <span style={{ color: C.gold, fontFamily: 'Boogaloo', fontSize: 17 }}>Figurinhas Especiais</span>
+            <span style={{ color: accentColor, fontFamily: 'Boogaloo', fontSize: 17 }}>{label}</span>
             {complete && <span>🏆</span>}
           </div>
           <div style={{ background: '#0f2d1a', borderRadius: 4, height: 6, marginTop: 4, overflow: 'hidden' }}>
-            <div style={{ height: '100%', width: `${pct}%`, background: C.gold, borderRadius: 4, transition: 'width 0.4s ease' }} />
+            <div style={{ height: '100%', width: `${pct}%`, background: accentColor, borderRadius: 4, transition: 'width 0.4s ease' }} />
           </div>
         </div>
-        <span style={{ color: C.gold, fontFamily: 'Boogaloo', fontSize: 15, whiteSpace: 'nowrap' }}>{owned}/68</span>
+        <span style={{ color: accentColor, fontFamily: 'Boogaloo', fontSize: 15, whiteSpace: 'nowrap' }}>{owned}/{total}</span>
         {open ? <ChevronDown size={18} color={C.cream} /> : <ChevronRight size={18} color={C.cream} />}
       </button>
 
       {open && (
         <div style={{ padding: '0 10px 10px' }}>
           <div className="sticker-grid">
-            {ESPECIAIS.map(esp => {
-              const key = `SPC-${esp.id}`
+            {items.map(item => {
+              const key = `${prefix}-${item.id}`
               const s = stickers[key] || { status: 'falta', qty: 0 }
               return (
                 <StickerCard
                   key={key}
                   stickerKey={key}
-                  number={esp.id}
-                  name={esp.nome}
+                  number={item.id}
+                  name={item.nome}
                   status={s.status}
                   qty={s.qty || 2}
                   onCycle={onCycle}
@@ -291,10 +292,16 @@ function AlbumView({ stickers, onCycle, onAdjust, searchQuery }) {
       }
     }
 
-    for (const esp of ESPECIAIS) {
-      const key = `SPC-${esp.id}`
-      if (esp.nome.toLowerCase().includes(q) || key.toLowerCase().includes(q) || String(esp.id) === q.replace('#', '')) {
-        results.push({ key, num: esp.id, name: esp.nome, team: null })
+    for (const item of FWC_STICKERS) {
+      const key = `FWC-${item.id}`
+      if (item.nome.toLowerCase().includes(q) || key.toLowerCase().includes(q) || String(item.id) === q.replace('#', '')) {
+        results.push({ key, num: item.id, name: item.nome, team: null })
+      }
+    }
+    for (const item of CC_STICKERS) {
+      const key = `CC-${item.id}`
+      if (item.nome.toLowerCase().includes(q) || key.toLowerCase().includes(q) || String(item.id) === q.replace('#', '')) {
+        results.push({ key, num: item.id, name: item.nome, team: null })
       }
     }
 
@@ -321,7 +328,7 @@ function AlbumView({ stickers, onCycle, onAdjust, searchQuery }) {
             return (
               <div key={key}>
                 <div style={{ color: C.gold, fontFamily: 'Boogaloo', fontSize: 11, textAlign: 'center', marginBottom: 2 }}>
-                  {team ? `${team.flag} ${team.code}` : '⭐ SPC'}
+                  {team ? `${team.flag} ${team.code}` : key.startsWith('FWC') ? '🏆 FWC' : '🥤 CC'}
                 </div>
                 <StickerCard stickerKey={key} number={num} name={name} status={s.status} qty={s.qty || 2} onCycle={onCycle} onAdjust={onAdjust} />
               </div>
@@ -347,7 +354,8 @@ function AlbumView({ stickers, onCycle, onAdjust, searchQuery }) {
           ))}
         </div>
       ))}
-      <SpeciaisSection stickers={stickers} onCycle={onCycle} onAdjust={onAdjust} />
+      <SpecialSection items={FWC_STICKERS} prefix="FWC" label="FWC — Copa 2026" icon="🏆" accentColor={C.gold} borderColor="#7c3aed" stickers={stickers} onCycle={onCycle} onAdjust={onAdjust} />
+      <SpecialSection items={CC_STICKERS} prefix="CC" label="Coca-Cola Stars" icon="🥤" accentColor="#ef4444" borderColor="#ef4444" stickers={stickers} onCycle={onCycle} onAdjust={onAdjust} />
     </div>
   )
 }
@@ -368,12 +376,18 @@ function FaltamView({ stickers, onCycle, onAdjust }) {
         if (missing.length > 0) result.push({ team, missing })
       }
     }
-    const missingEsp = []
-    for (const esp of ESPECIAIS) {
-      const key = `SPC-${esp.id}`
-      if ((stickers[key]?.status || 'falta') === 'falta') missingEsp.push({ key, num: esp.id, name: esp.nome })
+    const missingFwc = []
+    for (const item of FWC_STICKERS) {
+      const key = `FWC-${item.id}`
+      if ((stickers[key]?.status || 'falta') === 'falta') missingFwc.push({ key, num: item.id, name: item.nome })
     }
-    if (missingEsp.length > 0) result.push({ team: { code: 'SPC', name: 'Especiais', flag: '⭐' }, missing: missingEsp })
+    if (missingFwc.length > 0) result.push({ team: { code: 'FWC', name: 'FWC — Copa 2026', flag: '🏆' }, missing: missingFwc })
+    const missingCc = []
+    for (const item of CC_STICKERS) {
+      const key = `CC-${item.id}`
+      if ((stickers[key]?.status || 'falta') === 'falta') missingCc.push({ key, num: item.id, name: item.nome })
+    }
+    if (missingCc.length > 0) result.push({ team: { code: 'CC', name: 'Coca-Cola Stars', flag: '🥤' }, missing: missingCc })
     return result
   }, [stickers])
 
@@ -426,13 +440,20 @@ function RepetidaView({ stickers, onCycle, onAdjust }) {
         if (dupes.length > 0) result.push({ team, dupes })
       }
     }
-    const espDupes = []
-    for (const esp of ESPECIAIS) {
-      const key = `SPC-${esp.id}`
+    const fwcDupes = []
+    for (const item of FWC_STICKERS) {
+      const key = `FWC-${item.id}`
       const s = stickers[key]
-      if (s?.status === 'repetida') espDupes.push({ key, num: esp.id, name: esp.nome, qty: s.qty || 2 })
+      if (s?.status === 'repetida') fwcDupes.push({ key, num: item.id, name: item.nome, qty: s.qty || 2 })
     }
-    if (espDupes.length > 0) result.push({ team: { code: 'SPC', name: 'Especiais', flag: '⭐' }, dupes: espDupes })
+    if (fwcDupes.length > 0) result.push({ team: { code: 'FWC', name: 'FWC — Copa 2026', flag: '🏆' }, dupes: fwcDupes })
+    const ccDupes = []
+    for (const item of CC_STICKERS) {
+      const key = `CC-${item.id}`
+      const s = stickers[key]
+      if (s?.status === 'repetida') ccDupes.push({ key, num: item.id, name: item.nome, qty: s.qty || 2 })
+    }
+    if (ccDupes.length > 0) result.push({ team: { code: 'CC', name: 'Coca-Cola Stars', flag: '🥤' }, dupes: ccDupes })
     return result
   }, [stickers])
 
@@ -493,8 +514,10 @@ function StatsView({ stickers, owned, progress }) {
     : progress >= 10 ? 'Bom começo! Continua abrindo pacotinhos! 💪'
     : 'Vamos lá, Miguel! Abre mais pacotinhos! 📦⚽'
 
-  const espOwned = (() => { let n = 0; for (let i = 1; i <= 68; i++) if ((stickers[`SPC-${i}`]?.status || 'falta') !== 'falta') n++; return n })()
-  const espPct = Math.round((espOwned / 68) * 100)
+  const fwcOwned = useMemo(() => FWC_STICKERS.filter(item => (stickers[`FWC-${item.id}`]?.status || 'falta') !== 'falta').length, [stickers])
+  const ccOwned  = useMemo(() => CC_STICKERS.filter(item => (stickers[`CC-${item.id}`]?.status || 'falta') !== 'falta').length, [stickers])
+  const fwcPct = Math.round((fwcOwned / FWC_STICKERS.length) * 100)
+  const ccPct  = Math.round((ccOwned  / CC_STICKERS.length)  * 100)
 
   return (
     <div>
@@ -536,13 +559,22 @@ function StatsView({ stickers, owned, progress }) {
             </div>
           </div>
         ))}
-        <div style={{ marginBottom: 4 }}>
+        <div style={{ marginBottom: 10 }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 4 }}>
-            <span style={{ color: C.gold, fontFamily: 'Boogaloo', fontSize: 15 }}>Especiais{espPct === 100 ? ' ⭐' : ''}</span>
-            <span style={{ color: C.cream, fontFamily: 'Nunito', fontSize: 13, fontWeight: 700 }}>{espOwned}/68 ({espPct}%)</span>
+            <span style={{ color: C.gold, fontFamily: 'Boogaloo', fontSize: 15 }}>🏆 FWC{fwcPct === 100 ? ' ⭐' : ''}</span>
+            <span style={{ color: C.cream, fontFamily: 'Nunito', fontSize: 13, fontWeight: 700 }}>{fwcOwned}/{FWC_STICKERS.length} ({fwcPct}%)</span>
           </div>
           <div style={{ background: '#0f2d1a', borderRadius: 4, height: 10, overflow: 'hidden' }}>
-            <div style={{ height: '100%', width: `${espPct}%`, background: C.gold, borderRadius: 4, opacity: 0.85, transition: 'width 0.5s ease' }} />
+            <div style={{ height: '100%', width: `${fwcPct}%`, background: C.gold, borderRadius: 4, opacity: 0.85, transition: 'width 0.5s ease' }} />
+          </div>
+        </div>
+        <div style={{ marginBottom: 4 }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 4 }}>
+            <span style={{ color: '#ef4444', fontFamily: 'Boogaloo', fontSize: 15 }}>🥤 Coca-Cola{ccPct === 100 ? ' ⭐' : ''}</span>
+            <span style={{ color: C.cream, fontFamily: 'Nunito', fontSize: 13, fontWeight: 700 }}>{ccOwned}/{CC_STICKERS.length} ({ccPct}%)</span>
+          </div>
+          <div style={{ background: '#0f2d1a', borderRadius: 4, height: 10, overflow: 'hidden' }}>
+            <div style={{ height: '100%', width: `${ccPct}%`, background: '#ef4444', borderRadius: 4, opacity: 0.85, transition: 'width 0.5s ease' }} />
           </div>
         </div>
       </div>
@@ -570,8 +602,14 @@ function ShareModal({ stickers, owned, onClose, onImport }) {
         }
       }
     }
-    for (let i = 1; i <= 68; i++) {
-      const key = `SPC-${i}`
+    for (const item of FWC_STICKERS) {
+      const key = `FWC-${item.id}`
+      const s = stickers[key]
+      if (s?.status === 'repetida') repeated.push(`${key}×${s.qty || 2}`)
+      else if (!s || s.status === 'falta') missing.push(key)
+    }
+    for (const item of CC_STICKERS) {
+      const key = `CC-${item.id}`
       const s = stickers[key]
       if (s?.status === 'repetida') repeated.push(`${key}×${s.qty || 2}`)
       else if (!s || s.status === 'falta') missing.push(key)
@@ -691,8 +729,10 @@ export default function App() {
       for (const team of group.teams)
         for (let i = 1; i <= 20; i++)
           if ((stickers[`${team.code}-${i}`]?.status || 'falta') !== 'falta') owned++
-    for (let i = 1; i <= 68; i++)
-      if ((stickers[`SPC-${i}`]?.status || 'falta') !== 'falta') owned++
+    for (const item of FWC_STICKERS)
+      if ((stickers[`FWC-${item.id}`]?.status || 'falta') !== 'falta') owned++
+    for (const item of CC_STICKERS)
+      if ((stickers[`CC-${item.id}`]?.status || 'falta') !== 'falta') owned++
     return { owned, progress: Math.round((owned / TOTAL_STICKERS) * 100) }
   }, [stickers])
 
