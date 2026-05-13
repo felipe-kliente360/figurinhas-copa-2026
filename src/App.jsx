@@ -5,7 +5,7 @@ import {
 } from 'lucide-react'
 import { GROUPS_DATA, ESPECIAIS, TOTAL_STICKERS } from './data'
 
-// ── Constants ──────────────────────────────────────────────────────────────────
+// ── Constants ──────────────────────────────────────────────────────────────
 const STORAGE_KEY = 'album-miguel-2026'
 const C = {
   bg:        '#1a5c2e',
@@ -26,7 +26,7 @@ const MILESTONE_MSGS = {
   100: 'ÁLBUM COMPLETO! MIGUEL É O CAMPEÃO! 🎆🥇🎆',
 }
 
-// ── Storage ─────────────────────────────────────────────────────────────────────────────
+// ── Storage ────────────────────────────────────────────────────────────────
 function loadStickers() {
   try {
     const raw = localStorage.getItem(STORAGE_KEY)
@@ -39,7 +39,7 @@ function saveStickers(data) {
   try { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)) } catch {}
 }
 
-// ── StickerCard ──────────────────────────────────────────────────────────────────────
+// ── StickerCard ────────────────────────────────────────────────────────────
 function StickerCard({ stickerKey, number, name, status, qty, onCycle, onAdjust }) {
   const [animating, setAnimating] = useState(false)
 
@@ -122,7 +122,7 @@ function StickerCard({ stickerKey, number, name, status, qty, onCycle, onAdjust 
   )
 }
 
-// ── TeamSection ──────────────────────────────────────────────────────────────────────
+// ── TeamSection ────────────────────────────────────────────────────────────
 function TeamSection({ team, stickers, onCycle, onAdjust }) {
   const [open, setOpen] = useState(false)
 
@@ -190,7 +190,7 @@ function TeamSection({ team, stickers, onCycle, onAdjust }) {
   )
 }
 
-// ── SpeciaisSection ──────────────────────────────────────────────────────────────────────────
+// ── SpeciaisSection ────────────────────────────────────────────────────────
 function SpeciaisSection({ stickers, onCycle, onAdjust }) {
   const [open, setOpen] = useState(false)
 
@@ -255,7 +255,7 @@ function SpeciaisSection({ stickers, onCycle, onAdjust }) {
   )
 }
 
-// ── AlbumView ─────────────────────────────────────────────────────────────────────────────
+// ── AlbumView ──────────────────────────────────────────────────────────────
 function AlbumView({ stickers, onCycle, onAdjust, searchQuery }) {
   const searchResults = useMemo(() => {
     if (!searchQuery.trim()) return null
@@ -346,7 +346,7 @@ function AlbumView({ stickers, onCycle, onAdjust, searchQuery }) {
   )
 }
 
-// ── FaltamView ─────────────────────────────────────────────────────────────────────────────
+// ── FaltamView ─────────────────────────────────────────────────────────────
 function FaltamView({ stickers, onCycle, onAdjust }) {
   const groups = useMemo(() => {
     const result = []
@@ -405,7 +405,7 @@ function FaltamView({ stickers, onCycle, onAdjust }) {
   )
 }
 
-// ── RepetidaView ────────────────────────────────────────────────────────────────────────────
+// ── RepetidaView ───────────────────────────────────────────────────────────
 function RepetidaView({ stickers, onCycle, onAdjust }) {
   const groups = useMemo(() => {
     const result = []
@@ -465,7 +465,7 @@ function RepetidaView({ stickers, onCycle, onAdjust }) {
   )
 }
 
-// ── StatsView ────────────────────────────────────────────────────────────────────────────
+// ── StatsView ──────────────────────────────────────────────────────────────
 function StatsView({ stickers, owned, progress }) {
   const groupStats = useMemo(() => GROUPS_DATA.map(group => {
     let n = 0
@@ -544,7 +544,7 @@ function StatsView({ stickers, owned, progress }) {
   )
 }
 
-// ── ShareModal ────────────────────────────────────────────────────────────────────────────
+// ── ShareModal ─────────────────────────────────────────────────────────────
 function ShareModal({ stickers, owned, onClose, onImport }) {
   const [tab, setTab] = useState('share')
   const [importText, setImportText] = useState('')
@@ -607,7 +607,7 @@ function ShareModal({ stickers, owned, onClose, onImport }) {
 
         {tab === 'share' && (
           <div>
-            <textarea readOnly value={shareText} style={{ width: '100%', minHeight: 200, background: C.cardDark, color: C.cream, border: '1px solid #374151', borderRadius: 8, padding: '10px 12px', fontFamily: 'Nunito', fontSize: 12, lineHeight: 1.6, resize: 'none', boxSizing: 'border-box' }} />
+            <textarea readOnly value={shareText} style={{ width: '100%', minHeight: 200, background: C.cardDark, color: C.cream, border: '1px solid #374151', borderRadius: 8, padding: '10px 12px', fontFamily: 'Nunito', fontSize: 16, lineHeight: 1.6, resize: 'none', boxSizing: 'border-box' }} />
             <div style={{ display: 'flex', gap: 10, marginTop: 12 }}>
               <button onClick={handleCopy} style={{ flex: 1, padding: '12px 0', borderRadius: 10, background: copied ? C.green : '#374151', color: C.cream, border: 'none', fontFamily: 'Boogaloo', fontSize: 16, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6 }}>
                 {copied ? <><CheckCircle size={18} /> Copiado!</> : <><Copy size={18} /> Copiar</>}
@@ -625,7 +625,7 @@ function ShareModal({ stickers, owned, onClose, onImport }) {
         {tab === 'import' && (
           <div>
             <p style={{ color: '#9ca3af', fontFamily: 'Nunito', fontSize: 14, marginBottom: 10 }}>Cole aqui uma mensagem do app para importar:</p>
-            <textarea value={importText} onChange={e => setImportText(e.target.value)} placeholder="Cole a mensagem aqui..." style={{ width: '100%', minHeight: 180, background: C.cardDark, color: C.cream, border: '1px solid #374151', borderRadius: 8, padding: '10px 12px', fontFamily: 'Nunito', fontSize: 13, lineHeight: 1.6, resize: 'none', boxSizing: 'border-box' }} />
+            <textarea value={importText} onChange={e => setImportText(e.target.value)} placeholder="Cole a mensagem aqui..." style={{ width: '100%', minHeight: 180, background: C.cardDark, color: C.cream, border: '1px solid #374151', borderRadius: 8, padding: '10px 12px', fontFamily: 'Nunito', fontSize: 16, lineHeight: 1.6, resize: 'none', boxSizing: 'border-box' }} />
             <button
               onClick={() => onImport(importText)}
               disabled={!importText.trim()}
@@ -640,7 +640,7 @@ function ShareModal({ stickers, owned, onClose, onImport }) {
   )
 }
 
-// ── Notification ─────────────────────────────────────────────────────────────────────────────
+// ── Notification ───────────────────────────────────────────────────────────
 function Notification({ message, onDismiss }) {
   return (
     <div
@@ -652,7 +652,7 @@ function Notification({ message, onDismiss }) {
   )
 }
 
-// ── App ────────────────────────────────────────────────────────────────────────────────────
+// ── App ────────────────────────────────────────────────────────────────────
 export default function App() {
   const [stickers, setStickers]           = useState({})
   const [loading, setLoading]             = useState(true)
@@ -781,7 +781,7 @@ export default function App() {
                 value={search}
                 onChange={e => setSearch(e.target.value)}
                 placeholder="Buscar..."
-                style={{ background: C.cardMed, border: `1px solid #374151`, borderRadius: 8, color: C.cream, fontFamily: 'Nunito', fontSize: 13, padding: '7px 26px 7px 26px', outline: 'none', width: 110 }}
+                style={{ background: C.cardMed, border: `1px solid #374151`, borderRadius: 8, color: C.cream, fontFamily: 'Nunito', fontSize: 16, padding: '7px 26px 7px 26px', outline: 'none', width: 110 }}
               />
               {search && (
                 <button onClick={() => setSearch('')} style={{ position: 'absolute', right: 5, top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', cursor: 'pointer', color: C.cream, padding: 0, display: 'flex' }}>
