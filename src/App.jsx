@@ -6,7 +6,8 @@ import {
 import { GROUPS_DATA, FWC_STICKERS, CC_STICKERS, TOTAL_STICKERS } from './data'
 
 // ── Constants ──────────────────────────────────────────────────────────────
-const STORAGE_KEY = 'album-miguel-2026'
+const STORAGE_KEY  = 'album-miguel-2026'
+const PROFILE_KEY  = 'album-miguel-2026-profile'
 const C = {
   bg:        '#1a5c2e',
   bgPattern: 'repeating-linear-gradient(45deg,transparent,transparent 20px,rgba(255,255,255,0.025) 20px,rgba(255,255,255,0.025) 40px)',
@@ -19,12 +20,12 @@ const C = {
   cream:     '#fefce8',
 }
 
-const MILESTONE_MSGS = {
-  25:  '25%! Miguel tá voando! ✈️⚽',
-  50:  'METADE DO ÁLBUM! Incrível, Miguel! 🎯',
-  75:  '75%! Quase lá, campeão! 🏆',
-  100: 'ÁLBUM COMPLETO! MIGUEL É O CAMPEÃO! 🎆🥇🎆',
-}
+const getMilestoneMsgs = (name) => ({
+  25:  `25%! ${name} tá voando! ✈️⚽`,
+  50:  `METADE DO ÁLBUM! Incrível, ${name}! 🎯`,
+  75:  `75%! Quase lá, campeão! 🏆`,
+  100: `ÁLBUM COMPLETO! ${name.toUpperCase()} É O CAMPEÃO! 🎆🥇🎆`,
+})
 
 function getStickerName(team, num) {
   if (num === 1) return 'Escudo'
@@ -43,6 +44,19 @@ function loadStickers() {
 }
 function saveStickers(data) {
   try { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)) } catch {}
+}
+
+// ── Profile ────────────────────────────────────────────────────────────────
+function loadProfile() {
+  try {
+    const raw = localStorage.getItem(PROFILE_KEY)
+    return raw ? JSON.parse(raw) : null
+  } catch {
+    return null
+  }
+}
+function saveProfile(data) {
+  try { localStorage.setItem(PROFILE_KEY, JSON.stringify(data)) } catch {}
 }
 
 // ── StickerCard ────────────────────────────────────────────────────────────
@@ -361,7 +375,7 @@ function AlbumView({ stickers, onCycle, onAdjust, searchQuery }) {
 }
 
 // ── FaltamView ─────────────────────────────────────────────────────────────
-function FaltamView({ stickers, onCycle, onAdjust }) {
+function FaltamView({ stickers, onCycle, onAdjust, name }) {
   const groups = useMemo(() => {
     const result = []
     for (const group of GROUPS_DATA) {
@@ -397,7 +411,7 @@ function FaltamView({ stickers, onCycle, onAdjust }) {
     return (
       <div style={{ textAlign: 'center', padding: '60px 20px' }}>
         <div style={{ fontSize: 60 }}>🎆</div>
-        <p style={{ color: C.gold, fontFamily: 'Boogaloo', fontSize: 24, marginTop: 12 }}>ÁLBUM COMPLETO! MIGUEL É O CAMPEÃO!</p>
+        <p style={{ color: C.gold, fontFamily: 'Boogaloo', fontSize: 24, marginTop: 12 }}>ÁLBUM COMPLETO! {name?.toUpperCase()} É O CAMPEÃO!</p>
       </div>
     )
   }
@@ -493,7 +507,7 @@ function RepetidaView({ stickers, onCycle, onAdjust }) {
 }
 
 // ── StatsView ──────────────────────────────────────────────────────────────
-function StatsView({ stickers, owned, progress }) {
+function StatsView({ stickers, owned, progress, name }) {
   const groupStats = useMemo(() => GROUPS_DATA.map(group => {
     let n = 0
     const total = group.teams.length * 20
@@ -510,12 +524,12 @@ function StatsView({ stickers, owned, progress }) {
   const packets = Math.ceil(effectiveMissing / 7)
 
   const motiv =
-    progress >= 100 ? 'ÁLBUM COMPLETO! MIGUEL É O CAMPEÃO! 🎆🥇🎆'
+    progress >= 100 ? `ÁLBUM COMPLETO! ${name.toUpperCase()} É O CAMPEÃO! 🎆🥇🎆`
     : progress >= 75 ? 'Quase lá, campeão! Falta pouquinho! 🏆🔥'
-    : progress >= 50 ? 'Mais da metade! Incrível, Miguel! 🎯⚽'
+    : progress >= 50 ? `Mais da metade! Incrível, ${name}! 🎯⚽`
     : progress >= 25 ? 'Indo muito bem! Você é craque nisso! 🌟'
     : progress >= 10 ? 'Bom começo! Continua abrindo pacotinhos! 💪'
-    : 'Vamos lá, Miguel! Abre mais pacotinhos! 📦⚽'
+    : `Vamos lá, ${name}! Abre mais pacotinhos! 📦⚽`
 
   const fwcOwned = useMemo(() => FWC_STICKERS.filter(item => (stickers[`FWC-${item.id}`]?.status || 'falta') !== 'falta').length, [stickers])
   const ccOwned  = useMemo(() => CC_STICKERS.filter(item => (stickers[`CC-${item.id}`]?.status || 'falta') !== 'falta').length, [stickers])
@@ -586,7 +600,7 @@ function StatsView({ stickers, owned, progress }) {
 }
 
 // ── ShareModal ─────────────────────────────────────────────────────────────
-function ShareModal({ stickers, owned, onClose, onImport }) {
+function ShareModal({ stickers, owned, onClose, onImport, name }) {
   const [tab, setTab] = useState('share')
   const [importText, setImportText] = useState('')
   const [copied, setCopied] = useState(false)
@@ -618,7 +632,7 @@ function ShareModal({ stickers, owned, onClose, onImport }) {
       else if (!s || s.status === 'falta') missing.push(key)
     }
 
-    const lines = [`🏆 Álbum Copa 2026 — Miguel`, `📅 ${today} | ${owned}/${TOTAL_STICKERS} figurinhas`, ``]
+    const lines = [`🏆 Álbum Copa 2026 — ${name}`, `📅 ${today} | ${owned}/${TOTAL_STICKERS} figurinhas`, ``]
     if (repeated.length > 0) { lines.push(`✅ TENHO (repetidas pra trocar):`); lines.push(repeated.join(' ')); lines.push(``) }
     if (missing.length > 0) {
       lines.push(`❌ FALTAM:`)
@@ -699,10 +713,83 @@ function Notification({ message, onDismiss }) {
   )
 }
 
+// ── OnboardingScreen ───────────────────────────────────────────────────────
+function OnboardingScreen({ onDone }) {
+  const [name, setName]       = useState('')
+  const [article, setArticle] = useState('do')
+
+  const handleSubmit = (e) => {
+    e.preventDefault()
+    const trimmed = name.trim()
+    if (!trimmed) return
+    const profile = { name: trimmed, article }
+    saveProfile(profile)
+    onDone(profile)
+  }
+
+  return (
+    <div style={{ background: C.bg, backgroundImage: C.bgPattern, minHeight: '100svh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '20px 16px' }}>
+      <div style={{ fontSize: 64, marginBottom: 8 }}>⚽</div>
+      <div style={{ fontFamily: 'Boogaloo', color: C.gold, fontSize: 32, marginBottom: 4, textAlign: 'center' }}>Copa do Mundo 2026</div>
+      <div style={{ fontFamily: 'Nunito', color: C.cream, fontSize: 16, marginBottom: 32, textAlign: 'center', opacity: 0.85 }}>Vamos montar o seu álbum!</div>
+
+      <form onSubmit={handleSubmit} style={{ background: C.cardDark, borderRadius: 16, padding: '24px 20px', width: '100%', maxWidth: 360, border: `2px solid ${C.gold}`, display: 'flex', flexDirection: 'column', gap: 20 }}>
+        <div>
+          <label style={{ fontFamily: 'Nunito', color: C.cream, fontSize: 14, fontWeight: 700, display: 'block', marginBottom: 8 }}>
+            Qual é o seu nome?
+          </label>
+          <input
+            autoFocus
+            type="text"
+            value={name}
+            onChange={e => setName(e.target.value)}
+            placeholder="ex: Miguel"
+            maxLength={30}
+            style={{ width: '100%', background: C.cardMed, border: `2px solid ${name.trim() ? C.green : '#374151'}`, borderRadius: 10, color: C.cream, fontFamily: 'Boogaloo', fontSize: 24, padding: '10px 14px', outline: 'none', boxSizing: 'border-box', transition: 'border-color 0.2s' }}
+          />
+        </div>
+
+        <div>
+          <label style={{ fontFamily: 'Nunito', color: C.cream, fontSize: 14, fontWeight: 700, display: 'block', marginBottom: 8 }}>
+            Álbum do ou da?
+          </label>
+          <div style={{ display: 'flex', gap: 10 }}>
+            {['do', 'da'].map(opt => (
+              <button
+                key={opt}
+                type="button"
+                onClick={() => setArticle(opt)}
+                style={{ flex: 1, padding: '10px 0', background: article === opt ? C.green : C.cardMed, border: `2px solid ${article === opt ? C.green : '#374151'}`, borderRadius: 10, color: article === opt ? C.cardDark : C.cream, fontFamily: 'Boogaloo', fontSize: 22, cursor: 'pointer', transition: 'all 0.15s' }}
+              >
+                {opt}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {name.trim() && (
+          <div style={{ fontFamily: 'Nunito', color: C.gold, fontSize: 14, textAlign: 'center', opacity: 0.9 }}>
+            Álbum {article} <strong>{name.trim()}</strong> ⚽
+          </div>
+        )}
+
+        <button
+          type="submit"
+          disabled={!name.trim()}
+          style={{ background: name.trim() ? C.gold : '#374151', border: 'none', borderRadius: 10, padding: '14px 0', color: name.trim() ? C.cardDark : '#6b7280', fontFamily: 'Boogaloo', fontSize: 22, cursor: name.trim() ? 'pointer' : 'not-allowed', transition: 'all 0.2s' }}
+        >
+          Começar! 🚀
+        </button>
+      </form>
+    </div>
+  )
+}
+
 // ── App ────────────────────────────────────────────────────────────────────
 export default function App() {
   const [stickers, setStickers]           = useState({})
   const [loading, setLoading]             = useState(true)
+  const [profile, setProfile]             = useState(null)
   const [view, setView]                   = useState('album')
   const [search, setSearch]               = useState('')
   const [debouncedSearch, setDebounced]   = useState('')
@@ -712,7 +799,15 @@ export default function App() {
   const saveTimer                         = useRef(null)
   const notifTimer                        = useRef(null)
 
-  useEffect(() => { setStickers(loadStickers()); setLoading(false) }, [])
+  useEffect(() => {
+    setStickers(loadStickers())
+    setProfile(loadProfile())
+    setLoading(false)
+  }, [])
+
+  useEffect(() => {
+    if (profile) document.title = `Álbum ${profile.article} ${profile.name} ⚽`
+  }, [profile])
 
   useEffect(() => {
     if (loading) return
@@ -746,14 +841,16 @@ export default function App() {
   }, [])
 
   useEffect(() => {
+    if (!profile) return
+    const msgs = getMilestoneMsgs(profile.name)
     for (const m of [25, 50, 75, 100]) {
       if (progress >= m && milestoneRef.current < m) {
         milestoneRef.current = m
-        showNotif(MILESTONE_MSGS[m], 5000)
+        showNotif(msgs[m], 5000)
         break
       }
     }
-  }, [progress, showNotif])
+  }, [progress, showNotif, profile])
 
   const cycleSticker = useCallback((key) => {
     setStickers(prev => {
@@ -797,6 +894,10 @@ export default function App() {
     )
   }
 
+  if (!profile) {
+    return <OnboardingScreen onDone={(p) => setProfile(p)} />
+  }
+
   const VIEWS = [
     { id: 'album',     label: '📖 Álbum' },
     { id: 'faltam',   label: '❌ Faltam' },
@@ -812,7 +913,7 @@ export default function App() {
           <div style={{ flex: 1 }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 4 }}>
               <Trophy size={20} color={C.gold} />
-              <span style={{ fontFamily: 'Boogaloo', color: C.gold, fontSize: 20 }}>ÁLBUM DO MIGUEL</span>
+              <span style={{ fontFamily: 'Boogaloo', color: C.gold, fontSize: 20 }}>ÁLBUM {profile.article.toUpperCase()} {profile.name.toUpperCase()}</span>
             </div>
             <div style={{ background: '#1a4029', borderRadius: 6, height: 10, overflow: 'hidden' }}>
               <div style={{ height: '100%', width: `${progress}%`, background: `linear-gradient(90deg, ${C.green}, ${C.gold})`, borderRadius: 6, transition: 'width 0.5s ease' }} />
@@ -860,13 +961,13 @@ export default function App() {
       {/* Main */}
       <main style={{ maxWidth: 800, margin: '0 auto', padding: '12px 10px 40px' }}>
         {view === 'album'     && <AlbumView     stickers={stickers} onCycle={cycleSticker} onAdjust={adjustQty} searchQuery={debouncedSearch} />}
-        {view === 'faltam'   && <FaltamView    stickers={stickers} onCycle={cycleSticker} onAdjust={adjustQty} />}
+        {view === 'faltam'   && <FaltamView    stickers={stickers} onCycle={cycleSticker} onAdjust={adjustQty} name={profile.name} />}
         {view === 'repetidas' && <RepetidaView  stickers={stickers} onCycle={cycleSticker} onAdjust={adjustQty} />}
-        {view === 'stats'    && <StatsView     stickers={stickers} owned={owned} progress={progress} />}
+        {view === 'stats'    && <StatsView     stickers={stickers} owned={owned} progress={progress} name={profile.name} />}
       </main>
 
       {notification && <Notification message={notification} onDismiss={() => setNotification(null)} />}
-      {showShare && <ShareModal stickers={stickers} owned={owned} onClose={() => setShowShare(false)} onImport={handleImport} />}
+      {showShare && <ShareModal stickers={stickers} owned={owned} onClose={() => setShowShare(false)} onImport={handleImport} name={profile.name} />}
     </div>
   )
 }
