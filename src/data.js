@@ -113,7 +113,7 @@ export const GROUPS_DATA = [
       },
       {
         code: 'PAR', name: 'Paraguai', flag: '🇵🇾',
-        players: ['Roberto Fernández','Orlando Gill','Gustavo Gómez','Fabián Balbuena','Juan José Cáceres','Omar Alderete','Junior Alonso','Mathías Villasanti','Diego Gómez','Damián Bobadilla','Andrés Cubas','Matías Galarza','Julio Enciso','Miguel Almirón','Néstor Camacho','Ángel Romero','Antonio Sanabria','Carlos González'],
+        players: ['Roberto Fernández','Orlando Gill','Gustavo Gómez','Fabián Balbuena','Juan José Cáceres','Omar Alderete','Junior Alonso','Mathías Villasanti','Diego Gómez','Damián Bobadilla','Andrés Cubas','Matías Galarza','Julio Enciso','Alejandro Romero Gamarra','Miguel Almirón','Ramón Sosa','Ángel Romero','Antonio Sanabria'],
       },
       {
         code: 'AUS', name: 'Austrália', flag: '🇦🇺',
@@ -256,19 +256,19 @@ export const GROUPS_DATA = [
     teams: [
       {
         code: 'POR', name: 'Portugal', flag: '🇵🇹',
-        players: ['Diogo Costa','Rui Patrício','Rúben Dias','Pepe','João Cancelo','Nuno Mendes','Danilo Pereira','Bernardo Silva','Bruno Fernandes','João Palhinha','Vitinha','Rúben Neves','João Félix','Rafael Leão','Pedro Neto','Gonçalo Ramos','Diogo Jota','Cristiano Ronaldo'],
+        players: ['Diogo Costa','José Sá','Rúben Dias','João Cancelo','Diogo Dalot','Nuno Mendes','Gonçalo Inácio','Bernardo Silva','Bruno Fernandes','Rúben Neves','Vitinha','João Neves','Cristiano Ronaldo','Francisco Trincão','João Félix','Gonçalo Ramos','Pedro Neto','Rafael Leão'],
       },
       {
         code: 'COD', name: 'RD Congo', flag: '🇨🇩',
-        players: ['Joël Kiassumbua','Arthur Masuaku','Chancel Mbemba','Issama Mpeko','Glody Ngonda','Marcel Tisserand','Silas Mvumpa','Cédric Omoigui','Silas Wayack','Théo Bongonda','Lionel Mpasi','Nany Dimata','Paul-José Mpoku','Samuel Bastien','Jeando Fuchs','Cédric Bakambu','Yoane Wissa','Jonathan David'],
+        players: ['Lionel Mpasi','Aaron Wan-Bissaka','Axel Tuanzebe','Arthur Masuaku','Chancel Mbemba','Joris Kayembe','Charles Pickel','Ngal\'ayel Mukau','Edo Kayembe','Samuel Moutoussamy','Noah Sadiki','Théo Bongonda','Meschak Elia','Yoane Wissa','Brian Cipenga','Fiston Mayele','Cédric Bakambu','Nathanaël Mbuku'],
       },
       {
         code: 'UZB', name: 'Uzbequistão', flag: '🇺🇿',
-        players: ['Utkir Yusupov','Jasurbek Yakhshiboev','Sardor Jabbor','Dostonbek Khamdamov','Sherzod Nishonov','Azizbek Turgunboev','Abbosbek Fayzullaev','Otabek Shukurov','Jaloliddin Masharipov','Eldor Shomurodov','Husan Ergashev','Khojiakbar Alijonov','Bobur Abdixoliqov','Shokhrukh Zokirov','Mirazizbek Mirzayev','Nodir Tursunov','Ismoil Ergashev','Bahodir Abdullayev'],
+        players: ['Utkir Yusupov','Farrukh Sayfiev','Sherzod Nasrullaev','Umar Eshmurodov','Husniddin Aliqulov','Rustamjon Ashurmatov','Khojiakbar Alijonov','Abdukodir Khusanov','Odiljon Hamrobekov','Otabek Shukurov','Jamshid Iskanderov','Azizbek Turgunboev','Khojimat Erkinov','Eldor Shomurodov','Oston Urunov','Jaloliddin Masharipov','Igor Sergeev','Abbosbek Fayzullaev'],
       },
       {
         code: 'COL', name: 'Colômbia', flag: '🇨🇴',
-        players: ['Camilo Vargas','Eder Militão','Dávinson Sánchez','Jhon Lucumí','Daniel Muñoz','Johan Mojica','Carlos Cuesta','Wilmar Barrios','Richard Ríos','Matheus Uribe','Juan Fernando Quintero','James Rodríguez','Jhon Arias','Cucho Hernández','Jhon Córdoba','Rafael Borré','Luis Díaz','Miguel Ángel Borja'],
+        players: ['Camilo Vargas','David Ospina','Dávinson Sánchez','Yerry Mina','Daniel Muñoz','Johan Mojica','Jhon Lucumí','Santiago Arias','Jefferson Lerma','Richard Ríos','Kevin Castaño','James Rodríguez','Juan Fernando Quintero','Jorge Carrascal','Jhon Arias','Jhon Córdoba','Rafael Borré','Luis Díaz'],
       },
     ],
   },
@@ -277,19 +277,19 @@ export const GROUPS_DATA = [
     teams: [
       {
         code: 'ENG', name: 'Inglaterra', flag: '🏴󠁧󠁢󠁥󠁮󠁧󠁿',
-        players: ['Jordan Pickford','Aaron Ramsdale','Trent Alexander-Arnold','Kyle Walker','John Stones','Marc Guéhi','Luke Shaw','Declan Rice','Jude Bellingham','Phil Foden','Bukayo Saka','Harry Kane','Marcus Rashford','Cole Palmer','Kobbie Mainoo','Ollie Watkins','Jarrod Bowen','Anthony Gordon'],
+        players: ['Jordan Pickford','John Stones','Marc Guéhi','Ezri Konsa','Trent Alexander-Arnold','Reece James','Dan Burn','Jordan Henderson','Declan Rice','Jude Bellingham','Cole Palmer','Morgan Rogers','Anthony Gordon','Phil Foden','Bukayo Saka','Harry Kane','Marcus Rashford','Ollie Watkins'],
       },
       {
         code: 'CRO', name: 'Croácia', flag: '🇭🇷',
-        players: ['Dominik Livaković','Josip Stanišić','Josip Šutalo','Joško Gvardiol','Ivan Perišić','Josip Juranović','Borna Sosa','Marcelo Brozović','Mateo Kovačić','Luka Modrić','Nikola Vlašić','Lovro Majer','Bruno Petković','Andrej Kramarić','Marko Pjaca','Ivan Rakitić','Mario Pašalić','Luka Ivanušec'],
+        players: ['Dominik Livaković','Duje Ćaleta-Car','Joško Gvardiol','Josip Stanišić','Luka Vušković','Josip Šutalo','Kristijan Jakić','Luka Modrić','Mateo Kovačić','Martin Baturina','Lovro Majer','Mario Pašalić','Petar Sučić','Ivan Perišić','Nikola Vlašić','Ante Budimir','Andrej Kramarić','Franjo Ivanović'],
       },
       {
         code: 'GHA', name: 'Gana', flag: '🇬🇭',
-        players: ['Joseph Wollacott','Ibrahim Danlad','Alexander Djiku','Daniel Amartey','Tariq Lamptey','Baba Rahman','Gideon Mensah','Thomas Partey','Elisha Owusu','Salis Abdul Samed','Jordan Ayew','André Ayew','Antoine Semenyo','Mohammed Kudus','Ernest Nuamah','Abdul Fatawu Issahaku','Inaki Williams','Osman Bukari'],
+        players: ['Lawrence Ati Zigi','Tariq Lamptey','Mohammed Salisu','Alidu Seidu','Alexander Djiku','Gideon Mensah','Caleb Yirenkyi','Abdul Fatawu Issahaku','Thomas Partey','Salis Abdul Samed','Kamaldeen Sulemana','Mohammed Kudus','Iñaki Williams','Jordan Ayew','André Ayew','Joseph Paintsil','Osman Bukari','Antoine Semenyo'],
       },
       {
         code: 'PAN', name: 'Panamá', flag: '🇵🇦',
-        players: ['Luis Mejía','Jaime Penedo','Erick Davis','Fidel Escobar','Andrés Andrade','Roderick Miller','Harold Cummings','Adalberto Carrasquilla','Aníbal Godoy','José Fajardo','Édgar Bárcenas','Ismael Díaz','Rolando Blackburn','César Yanis','Armando Cooper','Iván Anderson','Alberto Quintero','Freddy Góndola'],
+        players: ['Orlando Mosquera','Luis Mejía','Fidel Escobar','Andrés Andrade','Michael Amir Murillo','Eric Davis','José Córdoba','César Blackman','Cristian Martínez','Aníbal Godoy','Adalberto Carrasquilla','Édgar Bárcenas','Carlos Harvey','Ismael Díaz','José Fajardo','Cecilio Waterman','José Luiz Rodríguez','Alberto Quintero'],
       },
     ],
   },
